@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KT1</title>
+</head>
+
+<body>
+    <hello-user name="Аня"></hello-user>
+    <hello-user></hello-user>
+    <click-counter></click-counter>
+    <footer>@ <current-year></current-year>Моя компания</footer>
+    <script>
+        class HelloUser extends HTMLElement {
+            connectedCallback() {
+                const name = this.getAttribute('name') || 'гость';
+                this.innerHTML = `Привет, ${name}!`;
+            }
+        }
+        class ClickCounter extends HTMLElement {
+            constructor() {
+                super();
+                this.count = 0;
+            }
+            connectedCallback() {
+                this.innerHTML = `<button>Клики: ${this.count}</button>`;
+                this.querySelector(`button`), addEventListener(`click`, () => {
+                    this.count++;
+                    this.querySelector(`button`).textContent = `Клики: ${this.count}`;
+                });
+            }
+        }
+        class CurrentYear extends HTMLElement {
+            connectedCallback() {
+                const year = new Date().getFullYear();
+                this.textContent = year;
+            }
+        }
+        customElements.define('hello-user', HelloUser);
+        customElements.define(`click-counter`, ClickCounter);
+        customElements.define(`current-year`, CurrentYear);
+    </script>
+</body>
+
+</html>

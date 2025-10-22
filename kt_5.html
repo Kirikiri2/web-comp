@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задание: Жизненный цикл</title>
+</head>
+<body>
+    <h1>Задание: Жизнь и смерть моего компонента</h1>
+    <my-box></my-box>
+    <button id="redBtn">Сделать красным</button>
+    <button id="blueBtn">Сделать синим</button>
+    <button id="removeBtn">Удалить элемент</button>
+    <script>
+        class MyBox extends HTMLElement {
+            constructor() {
+                super();
+        }
+        static get observedAttributes() {
+                return ["color"];
+        }
+        connectedCallback() {
+            this.style.backgroundColor = "green";
+            this.textContent = "Я появился!";
+        }
+        attributeChangedCallback(name, oldValue, newValue) {
+            if (name === "color") {
+                this.style.backgroundColor = newValue;
+            }
+        }
+        disconnectedCallback() {
+            console.log("Меня удалили!");
+        }}
+        customElements.define("my-box", MyBox);
+        document.getElementById("redBtn").addEventListener("click", () => {
+            document.querySelector("my-box").setAttribute("color", "red");
+        });
+        document.getElementById("blueBtn").addEventListener("click", () => {
+            document.querySelector("my-box").setAttribute("color", "blue");
+        });
+        document.getElementById("removeBtn").addEventListener("click", () => {
+            const box = document.querySelector("my-box");
+            if (box) {
+                box.remove();
+            }
+        });
+    </script>
+</body>
+</html>

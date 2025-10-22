@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom-elements</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            padding: 20px;
+        }
+
+        user-card,
+        product-card {
+            display: block;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+            max-width: 300px;
+            background: #f9f9f9;
+        }
+
+        user-card h3,
+        product-card h3 {
+            margin: 0 0 8px 0;
+        }
+
+        user-card button,
+        product-card button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            background: #0078d7;
+            color: white;
+            cursor: pointer;
+        }
+
+        user-card button:hover,
+        product-card button:hover {
+            background: #005bb5;
+        }
+
+        user-card img,
+        product-card img {
+            width: 64px;
+            height: 64px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Exemples</h1>
+    <h2>Users</h2>
+    <user-card name="Ann" age="15" avatar="загружено (10).jpg"></user-card>
+    <user-card></user-card>
+    <user-card name="Maks"></user-card>
+    <p></p>
+    <product-card title="Lenova" price="1500p" image="загружено (10).jpg"></product-card>
+    <product-card title="Sumsung"></product-card>
+    <count-button></count-button>
+    <script>
+        class UserCard extends HTMLElement {
+            constructor() {
+                super();
+                const container = document.createElement("div");
+                const title = document.createElement("h3");
+                const age = document.createElement("p");
+                const avatar = document.createElement("img");
+                const button = document.createElement("button");
+
+                age.textContent = this.getAttribute("age") || "undefine";
+                avatar.src = this.getAttribute("avatar") || "undefine";
+                title.textContent = this.getAttribute("name") || "Неизвестный";
+                button.textContent = "Привет";
+
+                container.appendChild(title);
+                container.appendChild(avatar);
+                container.appendChild(age);
+                container.appendChild(button);
+
+                this.appendChild(container);
+
+                button.addEventListener("click", () => {
+                    alert("Привет, " + title.textContent + "!");
+                });
+            };
+        };
+        class ProductCard extends HTMLElement {
+            constructor() {
+                super();
+                const container = document.createElement("div");
+                const title = document.createElement("h3");
+                const button = document.createElement("button");
+                const price = document.createElement("p");
+                const image = document.createElement("img");
+                price.textContent = this.getAttribute("price") || "undefine";
+                image.src = this.getAttribute("image") || "undefine";
+                title.textContent = this.getAttribute("title") || "Неизвестный товар";
+                button.textContent = "Buy";
+
+                container.appendChild(title);
+                container.appendChild(image);
+                container.appendChild(price);
+                container.appendChild(button);
+                this.appendChild(container);
+                button.addEventListener("click", () => {
+                    alert("Вы купили " + title.textContent);
+                });
+
+            };
+
+        };
+        class CounterButton extends HTMLElement {
+            constructor() {
+                super();
+                this.count = 0;
+                const button = document.createElement("button");
+                button.textContent = `Клик: ${this.count}`;
+                button.addEventListener("click", () => {
+                    this.count++;
+                    button.textContent = `Клик: ${this.count}`;
+                });
+                this.appendChild(button);
+            }
+        }
+        customElements.define("user-card", UserCard);
+        customElements.define("product-card", ProductCard);
+        customElements.define("count-button", CounterButton);
+    </script>
+</body>
+
+</html>

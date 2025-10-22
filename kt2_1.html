@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KT2-1</title>
+    <style>
+        main {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+    <template id="product-card">
+        <style>
+            .card {
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                padding: 10px;
+                max-width: 200px;
+                text-align: center;
+                margin: 10px;
+            }
+
+            .card img {
+                max-width: 100%;
+                border-radius: 4px;
+            }
+
+            .card h3 {
+                font-size: 16px;
+                margin: 8px 0;
+            }
+        </style>
+        <div class="card">
+            <img id="image" alt="Изображение товара">
+            <h3 id="title"></h3>
+            <slot name="details"></slot>
+            <slot></slot>
+        </div>
+    </template>
+    <main>
+        <product-card title="Золотое кольцо">
+            <p slot="details">Цена: 12 000 ₽</p>
+            <button>Купить</button>
+        </product-card>
+
+        <product-card title="Серебряные серьги">
+            <p slot="details">Цена: 4 500 ₽</p>
+        </product-card>
+
+        <product-card image="/загружено (10).jpg" title="Браслет">
+            <button>Добавить в корзину</button>
+        </product-card>
+    </main>
+    <script>
+        class ProductCard extends HTMLElement {
+            constructor() {
+                super();
+                const template = document.getElementById('product-card');
+                const shadow = this.attachShadow({ mode: 'open' });
+                shadow.appendChild(template.content.cloneNode(true));
+                const img = shadow.getElementById('image');
+                img.src = this.getAttribute('image') || '/f2fb00d1-aa6f-4bc6-aefc-deaa43ab4e0b.jpeg';
+                const title = shadow.getElementById('title');
+                title.textContent = this.getAttribute('title') || 'Неизвестный товар';
+            }
+        }
+
+        customElements.define('product-card', ProductCard);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" value="Привет" id="input" />
+    <script>
+        const input = document.getElementById('input');
+        alert(input.getAttribute('value'));
+        input.value = "Пока";
+        alert(input.value);
+        input.setAttribute('value', 'Hello');
+        alert(input.getAttribute('value'));
+    </script>
+</body>
+</html>

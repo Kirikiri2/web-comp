@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #status[data-order-state="новый"] { color: green; }
+        #status[data-order-state="в процессе"] { color: blue; }
+        #status[data-order-state="отменён"] { color: red; }
+    </style>
+</head>
+<body>
+    <div id="status" data-order-state="новый">Новый заказ</div>
+    <script>
+        const status = document.getElementById('status');
+        status.dataset.orderState = "новый";
+    </script>
+</body>
+</html>

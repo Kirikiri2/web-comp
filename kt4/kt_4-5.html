@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="box">HI GUYS</div>
+    <script>
+        Element.prototype.highlight = function() {
+        this.style.border = '2px solid green';
+        this.style.backgroundColor = 'red';
+        this.style.color = 'white';
+        };
+
+        const box = document.getElementById('box');
+        box.highlight();
+    </script>
+
+</body>
+</html>

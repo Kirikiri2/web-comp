@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Улучшенная верстка компонентов</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f0f0f0;
+  }
+  button {
+    margin: 10px 0;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  my-modal, todo-list, theme-button {
+    display: block;
+    margin: 20px 0;
+  }
+</style>
+</head>
+<body>
+<my-modal></my-modal>
+<button id="openModal">Открыть модальное окно</button>
+
+<todo-list></todo-list>
+
+<theme-button></theme-button>
+
+<script>
+class MyModal extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.innerHTML = `
+      <style>
+        #modal {
+          display: none;
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background: rgba(0,0,0,0.5);
+          justify-content: center;
+          align-items: center;
+        }
+        #content {
+          background: #fff;
+          padding: 20px;
+          border-radius: 8px;
+          max-width: 400px;
+          width: 80%;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+          position: relative;
+        }
+        button.close {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background: transparent;
+          border: none;
+          font-size: 20px;
+          cursor: pointer;
+        }
+      </style>
+      <div id="modal">
+        <div id="content">
+          <button class="close">&times;</button>
+          <div id="message"></div>
+        </div>
+      </div>
+    `;
+  }
+  connectedCallback() {
+    this.shadowRoot.querySelector("button.close").addEventListener("click", () => this.close());
+    this.shadowRoot.querySelector("#modal").addEventListener("click", e => {
+      if (e.target.id === "modal") this.close();
+    });
+  }
+  open(message) {
+    this.shadowRoot.getElementById("message").textContent = message;
+    this.shadowRoot.getElementById("modal").style.display = "flex";
+    this.dispatchEvent(new CustomEvent("modal-open", { detail: { message } }));
+  }
+  close() {
+    this.shadowRoot.getElementById("modal").style.display = "none";
+    console.log("Меня удалили!");
+  }
+}
+customElements.define("my-modal", MyModal);
+const modalInstance = document.querySelector("my-modal");
+document.getElementById("openModal").addEventListener("click", () => {
+  modalInstance.open("Это сообщение внутри модалки");
+});
+modalInstance.addEventListener("modal-open", (e) => {
+  console.log("Модалка открыта!");
+  console.log(e.detail.message);
+});
+
+class TodoItem extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.innerHTML = `
+      <style>
+        li {
+          display: flex;
+          justify-content: space-between;
+          padding: 8px;
+          border-bottom: 1px solid #ccc;
+        }
+        button {
+          background: none;
+          border: none;
+          color: red;
+          font-weight: bold;
+          cursor: pointer;
+        }
+      </style>
+      <li>
+        <span></span>
+        <button>&times;</button>
+      </li>
+    `;
+  }
+  connectedCallback() {
+    this.shadowRoot.querySelector("span").textContent = this.getAttribute("text");
+    this.shadowRoot.querySelector("button").addEventListener("click", () => this.remove());
+  }
+}
+customElements.define("todo-item", TodoItem);
+
+class TodoList extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.innerHTML = `
+      <style>
+        div {
+          max-width: 400px;
+        }
+        input {
+          width: calc(100% - 110px);
+          padding: 8px;
+          margin-right: 10px;
+        }
+      </style>
+      <div>
+        <input type="text" placeholder="Новая задача" />
+        <button id="addBtn">Добавить</button>
+        <ul></ul>
+      </div>
+    `;
+  }
+  connectedCallback() {
+    this.shadowRoot.querySelector("#addBtn").addEventListener("click", () => {
+      const input = this.shadowRoot.querySelector("input");
+      const text = input.value.trim();
+      if (text) {
+        const item = document.createElement("todo-item");
+        item.setAttribute("text", text);
+        this.shadowRoot.querySelector("ul").appendChild(item);
+        input.value = "";
+      }
+    });
+  }
+}
+customElements.define("todo-list", TodoList);
+
+class ThemeButton extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host {
+          --bg-color: white;
+          --text-color: black;
+        }
+        button {
+          padding: 10px 20px;
+          background-color: var(--bg-color);
+          color: var(--text-color);
+          border: 2px solid #000;
+          cursor: pointer;
+          font-size: 16px;
+        }
+      </style>
+      <button id="toggleTheme">Сменить тему</button>
+    `;
+    this.isLight = true;
+  }
+  connectedCallback() {
+    this.shadowRoot.querySelector("#toggleTheme").addEventListener("click", () => this.toggleTheme());
+  }
+  toggleTheme() {
+    if (this.isLight) {
+      this.style.setProperty("--bg-color", "red");
+      this.style.setProperty("--text-color", "white");
+      document.body.style.backgroundColor = "lightgreen";
+      document.body.style.color = "white";
+    } else {
+      this.style.setProperty("--bg-color", "white");
+      this.style.setProperty("--text-color", "black");
+      document.body.style.backgroundColor = "white";
+      document.body.style.color = "black";
+    }
+    this.isLight = !this.isLight;
+  }
+}
+customElements.define("theme-button", ThemeButton);
+</script>
+</body>
+</html>

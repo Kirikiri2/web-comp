@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KT2</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    }
+    .cards {
+      display: flex;
+      justify-content: space-around;
+    }
+    article-card {
+      display: block;
+    }
+    article-card h2 {
+        color: rgb(94, 71, 245);
+      }
+    article-card a {
+        color: #00bbff;
+        text-decoration: none;
+      }
+    article-card a:hover {
+        color: #015472;
+        text-decoration: underline;
+      }
+  </style>
+</head>
+<body>
+  <template id="article-card">
+    <style>
+      .article-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border: 2px solid grey;
+        border-radius: 25px;
+        padding: 15px;
+        margin: 10px;
+        max-width: 250px;
+      }
+    </style>
+    <div class="article-card">
+      <slot name="title"></slot>
+      <slot name="content"></slot>
+      <slot></slot>
+    </div>
+  </template>
+
+  <div class="cards">
+    <article-card>
+      <h2 slot="title">Card1</h2>
+      <p slot="content">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+      <a href="#">See more</a>
+      <footer>@2025</footer>
+    </article-card>
+
+    <article-card>
+      <h2 slot="title">Card2</h2>
+      <p slot="content">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+      <a href="#">See more</a>
+      <footer>@2025</footer>
+    </article-card>
+
+    <article-card>
+      <h2 slot="title">Card3</h2>
+      <p slot="content">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+      <a href="#">See more</a>
+      <footer>@2025</footer>
+    </article-card>
+  </div>
+
+  <script>
+    class ArticleCard extends HTMLElement {
+      constructor() {
+        super();
+        const template = document.getElementById('article-card');
+        const shadow = this.attachShadow({ mode: 'open' });
+        shadow.appendChild(template.content.cloneNode(true));
+      }
+    }
+    customElements.define('article-card', ArticleCard);
+  </script>
+</body>
+</html>
