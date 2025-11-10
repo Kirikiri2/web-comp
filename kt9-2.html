@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>KT9</title>
+<style>
+  body { font-family: Arial; margin: 20px; background: #fff; color: #333; transition: 0.3s; }
+  body.dark { background: #222; color: #eee; }
+
+  .controls { margin-bottom: 10px; }
+  button { margin-right: 5px; padding: 5px 10px; cursor: pointer; }
+  input { padding: 5px; margin-right: 5px; }
+
+  .card { background: #f5f5f5; padding: 10px; border-radius:5px; cursor:pointer; }
+  .card:hover { transform: translateY(-5px); }
+  img { width: 100%; height: 200px; object-fit: cover; border-radius:3px; }
+  .title { font-weight: bold; margin:5px 0; }
+  .author { font-size: 12px; color:#555; }
+</style>
+</head>
+<body>
+
+<h1>Каталог книг</h1>
+<book-list subject="fantasy" limit="9"></book-list>
+
+<script>
+  class BookCard extends HTMLElement {
+    constructor() {
+      super();
+      this.attachShadow({mode:'open'});
+      this.container = document.createElement('div');
+      this.shadowRoot.appendChild(this.container);
+    }
+
+    connectedCallback() {
+      if(this.book) this.render();
+    }
+
+    set data(book) {
+      this.book = book;
+      this.render();
+    }
+
+    render() {
+      if(!this.book) return;
+      const cover = this.book.cover_id 
+        ? `https://covers.openlibrary.org/b/id/${this.book.cover_id}-M.jpg`
+        : 'https://via.placeholder.com/150x200?text=Нет+обложки';
+      const author = this.book.authors && this.book.authors.length>0 ? this.book.authors[0].name : 'Неизвестен';
+
+      this.container.innerHTML = `
+        <div class="card">
+          <img src="${cover}" alt="${this.book.title}">
+          <div class="title">${this.book.title}</div>
+          <div class="author">${author}</div>
+        </div>
+      `;
+
+      this.container.onclick = () => alert(`Название: ${this.book.title}\nАвтор: ${author}`);
+    }
+  }
+  customElements.define('book-card', BookCard);
+
+  class BookList extends HTMLElement {
+    constructor() {
+      super();
+      this.attachShadow({mode:'open'});
+      this.container = document.createElement('div');
+      this.shadowRoot.appendChild(this.container);
+    }
+
+    connectedCallback() {
+      this.limit = parseInt(this.getAttribute('limit')) || 9;
+      this.subject = this.getAttribute('subject') || 'fantasy';
+      this.renderControls();
+      this.loadData();
+    }
+
+    renderControls() {
+      this.container.innerHTML = `
+    <div class="controls">
+      <input type="text" id="author-filter" placeholder="Фильтр по автору">
+      <button id="refresh">Обновить</button>
+      <button id="theme">Тема</button>
+    </div>
+    <div id="status">Загрузка...</div>
+    <div class="grid" id="grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;"></div>
+  `;
+
+      this.container.querySelector('#refresh').onclick = () => this.loadData(true);
+      this.container.querySelector('#theme').onclick = () => this.toggleTheme();
+      this.container.querySelector('#author-filter').oninput = (e) => this.filterBooks(e.target.value);
+    }
+
+    async loadData(forceNew=false) {
+      const status = this.container.querySelector('#status');
+      status.textContent = 'Загрузка...';
+
+      try {
+        let subject = this.subject;
+        if(forceNew){
+          const genres = ['fantasy','science_fiction','mystery','romance','adventure'];
+          subject = genres[Math.floor(Math.random()*genres.length)];
+        }
+
+        const res = await fetch(`https://openlibrary.org/subjects/${subject}.json?limit=${this.limit}`);
+        if(!res.ok) throw new Error('Ошибка загрузки');
+
+        const data = await res.json();
+        this.books = data.works || [];
+        this.filteredBooks = [...this.books];
+        this.renderBooks(this.filteredBooks);
+        status.textContent = '';
+      } catch(err) {
+        status.textContent = 'Ошибка загрузки данных';
+      }
+    }
+
+    renderBooks(books) {
+      const grid = this.container.querySelector('#grid');
+      grid.innerHTML = '';
+      books.forEach(book => {
+        const card = document.createElement('book-card');
+        card.data = book;
+        grid.appendChild(card);
+      });
+    }
+
+    filterBooks(text) {
+      if(!this.books) return;
+      const value = text.toLowerCase();
+      this.filteredBooks = this.books.filter(book => {
+        const author = book.authors && book.authors.length>0 ? book.authors[0].name.toLowerCase() : '';
+        return author.includes(value);
+      });
+      this.renderBooks(this.filteredBooks);
+    }
+
+    toggleTheme() {
+      document.body.classList.toggle('dark');
+    }
+  }
+
+  customElements.define('book-list', BookList);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>KT8</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    p {
+      color: #555;
+    }
+
+    #image-container {
+      background-color: white;
+      padding: 20px;
+      margin: 20px auto;
+      width: 70%;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    }
+
+    img {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+
+    #error {
+      color: red;
+      font-weight: bold;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>Приложение "Случайное фото"</h1>
+  <p>Показывает случайное изображение с сайта <strong>picsum.photos</strong>.</p>
+
+  <div id="image-container">
+    <img id="random-image" src="" alt="Случайное фото">
+  </div>
+
+  <div id="error"></div>
+  <button id="refresh">Обновить фото</button>
+
+  <script>
+    async function getRandomPhoto() {
+      const img = document.getElementById('random-image');
+      const errorEl = document.getElementById('error');
+
+      try {
+        const randomUrl = `https://picsum.photos/600/400?random=${Math.random()}`;
+        img.src = randomUrl;
+
+      } catch (error) {
+        errorEl.textContent = "Ошибка загрузки";
+      }
+    }
+    document.getElementById('refresh').addEventListener('click', getRandomPhoto);
+    getRandomPhoto();
+    setInterval(getRandomPhoto, 10000);
+  </script>
+</body>
+</html>
