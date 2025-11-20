@@ -1,0 +1,52 @@
+:host {
+    display: block;
+    font-family: Arial, sans-serif;
+    max-width: 400px;
+    margin: 20px auto;
+    border: 1px solid #ed3b3b;
+    padding: 10px;
+    background: #c87e7e;
+}
+
+h2 {
+    margin-top: 0;
+    text-align: center;
+    color: black;
+}
+
+form {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 5px;
+    font-size: 14px;
+}
+
+button {
+    padding: 5px 10px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    border-bottom: 1px solid #f18282;
+    color: black;
+}
+
+li.completed span {
+    text-decoration: line-through;
+    color: rgb(71, 43, 43);
+}
