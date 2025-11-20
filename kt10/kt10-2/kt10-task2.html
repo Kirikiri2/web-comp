@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Factorial Tests</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mocha/mocha.css">
+</head>
+<body>
+
+<div id="mocha"></div>
+<script src="https://cdn.jsdelivr.net/npm/mocha/mocha.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chai/chai.js"></script>
+
+<script>
+    mocha.setup("bdd");
+    const assert = chai.assert;
+</script>
+
+<script src="script.js"></script>
+<script src="test.js"></script>
+
+<script>
+    mocha.run();
+</script>
+
+</body>
+</html>

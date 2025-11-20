@@ -1,0 +1,13 @@
+.footer {
+    background: #222;
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.ad-block {
+    background: #ececec;
+    padding: 15px;
+    margin-top: 20px;
+    border: 1px solid #ddd;
+}

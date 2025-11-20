@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мини-магазин</title>
+
+    <link rel="preload" href="style.min.css" as="style">
+    <link rel="preload" href="script.min.js" as="script">
+    <link rel="stylesheet" href="style.min.css">
+    <link rel="stylesheet" href="mobile.min.css" media="screen and (max-width: 480px)">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mocha/mocha.css">
+</head>
+<body>
+
+<h1>Мини-магазин</h1>
+
+<div class="product" data-id="1">
+    <span>Товар 1</span>
+    <button class="add-btn">Добавить в корзину</button>
+</div>
+
+<div class="product" data-id="2">
+    <span>Товар 2</span>
+    <button class="add-btn">Добавить в корзину</button>
+</div>
+
+<div class="cart">
+    <h2>Корзина</h2>
+    <ul id="cart-items"></ul>
+</div>
+
+<div id="mocha"></div>
+<script src="https://cdn.jsdelivr.net/npm/mocha/mocha.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chai/chai.js"></script>
+<script>
+    mocha.setup("bdd");
+    const assert = chai.assert;
+</script>
+
+<script src="script.min.js" defer></script>
+<script src="test.js"></script>
+<script>
+    mocha.run();
+</script>
+
+</body>
+</html>

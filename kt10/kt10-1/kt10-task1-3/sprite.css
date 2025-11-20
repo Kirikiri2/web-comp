@@ -1,0 +1,18 @@
+.icon {
+    width: 64px;
+    height: 64px;
+    background-image: url("sprite.png");
+    background-repeat: no-repeat;
+}
+
+.fb {
+    background-position: 0 0;
+}
+
+.tw {
+    background-position: -64px 0;
+}
+
+.ig {
+    background-position: -128px 0;
+}
