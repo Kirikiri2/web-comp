@@ -4,7 +4,6 @@ class TaskList extends HTMLElement {
         this.attachShadow({mode: 'open'});
         this.tasks = [];
 
-        // Добавляем стили и структуру
         const link = document.createElement('link');
         link.setAttribute('rel', 'stylesheet');
         link.setAttribute('href', 'task-list.css');
